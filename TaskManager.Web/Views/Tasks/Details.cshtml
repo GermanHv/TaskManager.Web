@@ -1,0 +1,23 @@
+﻿@model TaskManager.Web.Models.TaskViewModel
+
+<h1>Detalle de la tarea</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Título</dt>
+    <dd class="col-sm-9">@Model.Title</dd>
+
+    <dt class="col-sm-3">Categoría</dt>
+    <dd class="col-sm-9">@Model.CategoryName</dd>
+
+    <dt class="col-sm-3">Step</dt>
+    <dd class="col-sm-9">@Model.Step</dd>
+
+    <dt class="col-sm-3">Completada</dt>
+    <dd class="col-sm-9">@Model.IsCompleted</dd>
+
+    <dt class="col-sm-3">Fecha creación</dt>
+    <dd class="col-sm-9">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</dd>
+</dl>
+
+<a asp-action="Index" class="btn btn-secondary">Volver</a>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>

@@ -1,0 +1,60 @@
+﻿@model TaskManager.Web.Models.PagedResultViewModel<TaskManager.Web.Models.TaskViewModel>
+
+@{
+    ViewData["Title"] = "Tareas";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<h1>
+    Tareas                     
+    <a asp-action="Create" class="btn btn-sm btn-primary">Agregar</a>
+</h1>
+
+<p>Mostrando @Model.Items.Count() de @Model.TotalCount</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Completada</th>
+            <th>Step</th>
+            <th>Actiones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var t in Model.Items)
+        {
+            <tr>
+                <td>@t.Id</td>
+                <td>@t.Title</td>
+                <td>@t.CategoryName</td>
+                <td>@(t.IsCompleted ? "Sí" : "No")</td>
+                <td>@t.Step</td>
+                <td>
+                    <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="btn btn-sm btn-primary">
+                        Ver detalles
+                    </a>
+                    <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-sm btn-primary">Editar</a> 
+                    <form asp-action="Delete" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@t.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('¿Estás seguro de que deseas eliminar esta tarea?');">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
