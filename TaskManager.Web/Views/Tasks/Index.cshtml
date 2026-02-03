@@ -4,18 +4,11 @@
     ViewData["Title"] = "Tareas";
 }
 
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">@TempData["Success"]</div>
-}
-
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">@TempData["Error"]</div>
-}
+@* 1. Reemplazas los bloques @if de TempData por el partial *@
+<partial name="_AlertMessages" />
 
 <h1>
-    Tareas                     
+    Tareas
     <a asp-action="Create" class="btn btn-sm btn-primary">Agregar</a>
 </h1>
 
