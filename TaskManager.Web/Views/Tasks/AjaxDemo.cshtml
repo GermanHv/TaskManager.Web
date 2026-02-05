@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Demo AJAX";
+}
+
+<h1>Buscar tareas (AJAX)</h1>
+
+<div class="mb-3">
+    <label class="form-label">Buscar por texto:</label>
+    <input id="searchAjax" class="form-control" placeholder="Escribe para buscar..." />
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Step</th>
+            <th>Completada</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="ajaxResults">
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="~/js/Task/task-ajax.js"></script>
+}
