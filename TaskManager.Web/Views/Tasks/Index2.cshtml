@@ -1,0 +1,105 @@
+﻿@model TaskManager.Web.Models.TaskSearchViewModel
+
+<h1>Listado de Tareas</h1>
+
+<partial name="_AlertMessages" />
+
+<form method="get" class="row g-3 mb-4">
+
+    <div class="col-md-3">
+        <label class="form-label">Texto</label>
+        <input asp-for="Text" class="form-control" />
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Categoría (Id)</label>
+        <input asp-for="CategoryId" class="form-control" type="number" />
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Nombre de Categoría</label>
+        <input asp-for="CategoryName" class="form-control" />
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Step</label>
+        <input asp-for="Step" class="form-control" type="number" />
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Estado</label>
+        <select asp-for="IsCompleted" class="form-select">
+            <option value="">-- todos --</option>
+            <option value="true">Completadas</option>
+            <option value="false">Pendientes</option>
+        </select>
+    </div>
+
+    <div class="col-md-12 mt-3">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+        <a asp-action="Index2" class="btn btn-secondary">Limpiar</a>
+    </div>
+
+</form>
+
+@if (Model.Result != null && Model.Result.Items.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Categoría</th>
+                <th>Step</th>
+                <th>Completada</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Result.Items)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.CategoryName</td>
+                    <td>@item.Step</td>
+                    <td>@(item.IsCompleted ? "Sí" : "No")</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Ver</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Editar</a>
+                        <form asp-action="Delete" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button class="btn btn-sm btn-danger">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No se encontraron resultados.</p>
+}
+@if (Model.Result != null && Model.Result.TotalCount > 1)
+{
+    <nav>
+        <ul class="pagination">
+
+            @for (int i = 1; i <= Model.Result.TotalCount; i++)
+            {
+                <li class="page-item @(i == Model.Page ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-Page="@i"
+                       asp-route-Text="@Model.Text"
+                       asp-route-CategoryId="@Model.CategoryId"
+                       asp-route-CategoryName="@Model.CategoryName"
+                       asp-route-Step="@Model.Step"
+                       asp-route-IsCompleted="@Model.IsCompleted">
+                        @i
+                    </a>
+                </li>
+            }
+
+        </ul>
+    </nav>
+}

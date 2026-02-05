@@ -13,5 +13,6 @@ namespace TaskManager.Web.Services
         Task UpdateTaskAsync(EditTaskViewModel model);
         Task<bool> DeleteTaskAsync(int id);
         Task<TaskViewModel>GetTaskDetailAsync(int id);
+        Task<PagedResultViewModel<TaskViewModel>>AdvancedSearchAsync(TaskSearchViewModel filters);
     }
 }
