@@ -19,8 +19,10 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
 app.UseAuthorization();
+
+// Aquí va el middleware MVC de errores
+app.UseMvcGlobalErrorHandler();
 
 //Esa línea define la ruta “clásica” (MVC) que ASP.NET Core usa para decidir qué controlador y qué acción ejecutar cuando llega una petición HTTP. Si llega una URL y no coincide con nada más específico,intenta interpretarla como:Controlador / Acción / Id opcional.
 app.MapControllerRoute(
