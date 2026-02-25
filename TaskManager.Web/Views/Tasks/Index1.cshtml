@@ -2,6 +2,10 @@
 
 <h1>Listado de Tareas</h1>
 
+<button id="btnCrearTask" class="btn btn-success mb-3">
+    Crear tarea
+</button>
+
 <form id="filterForm" class="row g-3 mb-3">
     <div class="col-md-3">
         <label class="form-label">Texto</label>
@@ -41,6 +45,16 @@
     @await Html.PartialAsync("_TaskTablePartial", Model.Result?.Items)
 </div>
 
+<!-- Declaración de modal -->
+<div class="modal fade" id="taskModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" id="taskModalContent">
+            <!-- Aquí se inyectará la partial -->
+        </div>
+    </div>
+</div>
+
 @section Scripts {
-    <script src="~/js/Task/tasks-partial.js"></script>
+    <script src="~/js/Task/task-modal.js"></script>
+
 }
