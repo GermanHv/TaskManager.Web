@@ -36,7 +36,7 @@ namespace TaskManager.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateTaskViewModel model)
+        public async Task<IActionResult> Create([FromBody]CreateTaskViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
@@ -52,7 +52,7 @@ namespace TaskManager.Web.Controllers
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> Edit(EditTaskViewModel model)
+        public async Task<IActionResult> Edit([FromBody]EditTaskViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
@@ -119,6 +119,57 @@ namespace TaskManager.Web.Controllers
         {
             var result = await _client.AdvancedSearchAsync(filters);
             return PartialView("_TaskTablePartial", result.Items);
+        }
+
+        //[HttpGet]
+        //public IActionResult CreatePartial()
+        //{
+        //    return PartialView("_TaskFormPartial", new CreateTaskViewModel());
+        //}
+
+        //[HttpGet]
+        //public async Task<IActionResult> EditPartial(int id)
+        //{
+        //    var task = await _client.GetTaskByIdAsync(id);
+        //    return PartialView("_TaskFormPartial", task);
+        //}
+
+        [HttpGet]
+        public IActionResult CreatePartial()
+        {
+            var model = new TaskFormViewModel
+            {
+                Id = 0,              // crear
+                Title = string.Empty,
+                CategoryId = 0,
+                Step = 1,
+                IsCompleted = false
+            };
+
+            return PartialView("_TaskFormPartial", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditPartial(int id)
+        {
+            var task = await _client.GetTaskByIdAsync(id);
+
+            if (task == null)
+            {
+                // puedes decidir qué hacer aquí (redirigir, mensaje, etc.)
+                return NotFound();
+            }
+
+            var model = new TaskFormViewModel
+            {
+                Id = task.Id,
+                Title = task.Title,
+                CategoryId = task.CategoryId,
+                Step = task.Step,
+                IsCompleted = task.IsCompleted
+            };
+
+            return PartialView("_TaskFormPartial", model);
         }
     }
 }

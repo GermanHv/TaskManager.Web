@@ -7,6 +7,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\NewFolder1\**" />
+    <Compile Remove="Models\NewFolder2\**" />
+    <Compile Remove="Models\NewFolder3\**" />
+    <Compile Remove="Models\NewFolder\**" />
+    <Content Remove="Models\NewFolder1\**" />
+    <Content Remove="Models\NewFolder2\**" />
+    <Content Remove="Models\NewFolder3\**" />
+    <Content Remove="Models\NewFolder\**" />
+    <EmbeddedResource Remove="Models\NewFolder1\**" />
+    <EmbeddedResource Remove="Models\NewFolder2\**" />
+    <EmbeddedResource Remove="Models\NewFolder3\**" />
+    <EmbeddedResource Remove="Models\NewFolder\**" />
+    <None Remove="Models\NewFolder1\**" />
+    <None Remove="Models\NewFolder2\**" />
+    <None Remove="Models\NewFolder3\**" />
+    <None Remove="Models\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="bootstrap" Version="5.3.8" />
   </ItemGroup>
 
