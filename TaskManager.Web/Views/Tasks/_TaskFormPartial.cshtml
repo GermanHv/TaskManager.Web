@@ -19,7 +19,15 @@
 
         <div class="mb-3">
             <label class="form-label">Categoría</label>
-            <input name="CategoryId" value="@Model.CategoryId" type="number" class="form-control" />
+
+            <select id="categorySelect"
+                    name="CategoryId"
+                    class="form-select"
+                    data-selected-category-id="@Model.CategoryId">
+                <option value="">-- Seleccione una categoría --</option>
+                @* Las opciones reales se llenarán con fetch *@
+            </select>
+
             <span class="text-danger" data-valmsg-for="CategoryId"></span>
         </div>
 
@@ -30,7 +38,9 @@
         </div>
 
         <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" name="IsCompleted"
+            <input class="form-check-input"
+                   type="checkbox"
+                   name="IsCompleted"
                    @(Model.IsCompleted ? "checked" : "") />
             <label class="form-check-label">Completada</label>
         </div>
