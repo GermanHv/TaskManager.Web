@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 using TaskManager.Web.Services;
 
 namespace TaskManager.Web.Controllers
@@ -43,6 +44,14 @@ namespace TaskManager.Web.Controllers
         public IActionResult Index()
         {
             return View(); // Queda pendiente para otra clase
+        }
+
+        // GET: /Categories/Options
+        [HttpGet]
+        public async Task<IActionResult> Options()
+        {
+            var categories = await _categoryApiClient.GetSimpleListAsync();
+            return Json(categories); // Devuelve JSON al JS del front
         }
     }
 }
