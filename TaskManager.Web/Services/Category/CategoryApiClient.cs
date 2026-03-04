@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using TaskManager.Web.Models;
+using TaskManager.Web.Utilities.Exceptions;
 
 namespace TaskManager.Web.Services
 {
