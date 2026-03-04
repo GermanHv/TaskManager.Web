@@ -171,5 +171,19 @@ namespace TaskManager.Web.Controllers
 
             return PartialView("_TaskFormPartial", model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAjax(int id)
+        {
+           
+                await _client.DeleteTaskAsync(id);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "La tarea se eliminó correctamente."
+                });  
+            
+        }
     }
 }
