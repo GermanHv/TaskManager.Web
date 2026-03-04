@@ -58,5 +58,27 @@ namespace TaskManager.Web.Services
                         ? $" ({result.Duplicadas} filas duplicadas no se importaron.)"
                         : string.Empty);
         }
+
+        public async Task<List<CategoryOptionViewModel>> GetSimpleListAsync()
+        {
+            // Llamamos al endpoint de la API: /api/categories/simple-list
+            var response = await _httpClient.GetAsync("/api/categories");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var body = await response.Content.ReadAsStringAsync();
+                var message = string.IsNullOrWhiteSpace(body)
+                    ? $"Error al obtener categorías. Código: {(int)response.StatusCode}"
+                    : body;
+
+                throw new ApiException(message, (int)response.StatusCode);
+            }
+
+            var categories =
+                await response.Content.ReadFromJsonAsync<List<CategoryOptionViewModel>>()
+                ?? new List<CategoryOptionViewModel>();
+
+            return categories;
+        }
     }
 }
