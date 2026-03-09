@@ -37,13 +37,13 @@
         </select>
     </div>
 
-    <div class="col-md-12">
-        <button type="button" id="btnBuscarAjax" class="btn btn-primary">Buscar (AJAX)</button>
+    <div class="col-2 d-flex align-items-end">
+        <button type="button" id="btnBuscarAjax" class="btn btn-primary w-100">Buscar</button>
     </div>
 </form>
 
 <div id="taskTableContainer">
-    @await Html.PartialAsync("_TaskTablePartial", Model.Result?.Items)
+    @await Html.PartialAsync("_TaskTablePartial", Model)
 </div>
 
 <!-- Declaración de modal -->

@@ -75,7 +75,49 @@
         </tbody>
     </table>
 }
-else
+<!-- PAGINACIÓN -->
+@{
+    var totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
+}
+
+<nav>
+    <ul class="pagination justify-content-center">
+
+        <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-page="@(Model.Page - 1)"
+               asp-route-text="@Model.Text"
+               asp-route-categoryName="@Model.CategoryName"
+               asp-route-isCompleted="@Model.IsCompleted"
+               asp-route-step="@Model.Step">
+                Anterior
+            </a>
+        </li>
+
+        <li class="page-item disabled">
+            <span class="page-link"
+                  Página @Model.Page de @totalPages
+            </span>
+        </li>
+
+        <li class="page-item @(Model.Page >= totalPages ? "disabled" : "")">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-page="@(Model.Page + 1)"
+               asp-route-text="@Model.Text"
+               asp-route-categoryName="@Model.CategoryName"
+               asp-route-isCompleted="@Model.IsCompleted"
+               asp-route-step="@Model.Step">
+                Siguiente
+            </a>
+        </li>
+
+    </ul>
+</nav>
+
+<a asp-action="Create" class="btn btn-sm btn-primary">Agregar</a>
+@* else
 {
     <p>No se encontraron resultados.</p>
 }
@@ -102,4 +144,4 @@ else
 
         </ul>
     </nav>
-}
+} *@

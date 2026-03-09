@@ -24,6 +24,7 @@ namespace TaskManager.Web.Controllers
             if (model.Page == 0)
                 model.Page = 1;
 
+            model.PageSize = 4;
             model.Result = await _client.SearchTasksAsync(model);
 
             return View("Index1", model);
@@ -118,7 +119,8 @@ namespace TaskManager.Web.Controllers
         public async Task<IActionResult> LoadTablePartial(TaskSearchViewModel filters)
         {
             var result = await _client.AdvancedSearchAsync(filters);
-            return PartialView("_TaskTablePartial", result.Items);
+            filters.Result = result;
+            return PartialView("_TaskTablePartial", filters);
         }
 
         //[HttpGet]
@@ -170,6 +172,52 @@ namespace TaskManager.Web.Controllers
             };
 
             return PartialView("_TaskFormPartial", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAjax(TaskFormViewModel model)// Se quitó el [FromBody]
+        {
+            if (!ModelState.IsValid)
+            {
+                Response.StatusCode = 400;
+                // Devuelves la misma partial con errores de ModelState
+                return PartialView("_TaskFormPartial", model);
+            }
+
+            // Mapear a DTO de la API
+            var dto = new CreateTaskViewModel
+            {
+                Title = model.Title,
+                CategoryId = model.CategoryId,
+                Step = model.Step
+            };
+
+            await _client.CreateTaskAsync(dto);
+
+            return Ok(); // JS cierra el modal y refresca la tabla
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditAjax(int id, TaskFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                Response.StatusCode = 400;
+                return PartialView("_TaskFormPartial", model);
+            }
+
+            var dto = new EditTaskViewModel
+            {
+                Id = id,
+                Title = model.Title,
+                CategoryId = model.CategoryId,
+                Step = model.Step,
+                IsCompleted = model.IsCompleted
+            };
+
+            await _client.UpdateTaskAsync(dto);
+
+            return Ok();
         }
 
         [HttpPost]

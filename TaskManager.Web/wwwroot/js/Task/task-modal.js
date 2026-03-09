@@ -2,6 +2,9 @@
 
     const modal = new bootstrap.Modal(document.getElementById("taskModal"));
     const modalContent = document.getElementById("taskModalContent");
+    const btnBuscar = document.getElementById("btnBuscarAjax");
+    const contenedor = document.getElementById("taskTableContainer");
+    const formulario = document.getElementById("filterForm");
 
     // CREAR
     document.getElementById("btnCrearTask")
@@ -46,18 +49,28 @@
 
             const form = document.getElementById("taskForm");
             const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
+            //const data = Object.fromEntries(formData.entries());
 
-            const isEdit = data.Id && data.Id !== "0";
+            // Obtenemos el Id directamente del formData para construir la URL
+            const id = formData.get("Id");
+            const isEdit = id && id !== "0";
 
             const url = isEdit
-                ? `/Tasks/EditAjax/${data.Id}`
+                ? `/Tasks/EditAjax/${id}`
                 : `/Tasks/CreateAjax`;
 
+            //console.log(JSON.stringify(data));
+            //const response = await fetch(url, {
+            //    method: "POST",
+            //    headers: { "Content-Type": "application/json" },
+            //    body: JSON.stringify(data)
+            //});
+
+            // Enviamos el formData directo. 
+            // C# (sin [FromBody]) lo entenderá a la perfección.
             const response = await fetch(url, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
+                body: formData
             });
 
             if (!response.ok) {
@@ -74,6 +87,56 @@
             modal.hide();
 
             await refreshTable();
+        }
+    });
+
+    // EVENTO PARA LA PAGINACIÓN CON FILTROS
+    document.addEventListener("click", async (e) => {
+        // Verifica si el clic fue en un enlace de paginación
+        if (e.target.matches(".page-link-btn")) {
+            e.preventDefault(); // Evita comportamientos por defecto si fuera un enlace normal
+
+            const page = e.target.dataset.page; // Obtiene el número de página del atributo data-page
+            if (!page) return;
+
+            const contenedor = document.getElementById("taskTableContainer");
+            const formulario = document.getElementById("filterForm");
+
+            contenedor.innerHTML = spinnerHtml(); // Muestra el loader mientras carga
+
+            // 1. Convertimos el formulario actual en QueryString para conservar los filtros
+            const formData = new FormData(formulario);
+            const query = new URLSearchParams();
+
+            formData.forEach((value, key) => {
+                if (value !== null && value !== "") {
+                    query.append(key, value);
+                }
+            });
+
+            // 2. Agregamos el número de página a la consulta
+            query.set("Page", page);
+
+            // 3. Construimos la URL con los filtros y la página
+            const url = '/Tasks/LoadTablePartial?' + query.toString();
+
+            try {
+                // 4. Llamada AJAX
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    contenedor.innerHTML = "<p>Error al cargar resultados de la página.</p>";
+                    return;
+                }
+
+                const html = await response.text();
+
+                // 5. Reemplazamos la tabla con los nuevos resultados
+                contenedor.innerHTML = html;
+            } catch (error) {
+                console.error(error);
+                contenedor.innerHTML = "<p>Error de conexión al cambiar de página.</p>";
+            }
         }
     });
 
@@ -120,9 +183,36 @@ function spinnerHtml() {
 }
 
 async function refreshTable() {
-    const response = await fetch("/Tasks/LoadTablePartial");
-    const html = await response.text();
-    document.getElementById("taskTableContainer").innerHTML = html;
+    const contenedor = document.getElementById("taskTableContainer");
+    const formulario = document.getElementById("filterForm");
+
+    // Muestra el spinner mientras carga la tabla actualizada
+    contenedor.innerHTML = spinnerHtml();
+
+    // Lee los filtros actuales que el usuario tiene escritos en los inputs
+    const formData = new FormData(formulario);
+    const query = new URLSearchParams();
+
+    formData.forEach((value, key) => {
+        if (value !== null && value !== "") {
+            query.append(key, value);
+        }
+    });
+
+    // Pide la tabla al servidor PERO enviándole los filtros para que los conserve
+    const url = '/Tasks/LoadTablePartial?' + query.toString();
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            contenedor.innerHTML = "<p>Error al recargar la tabla.</p>";
+            return;
+        }
+        const html = await response.text();
+        contenedor.innerHTML = html;
+    } catch (err) {
+        console.error("Error recargando la tabla:", err);
+    }
 }
 
 // Función para cargar las categorías en el select del modal
@@ -135,7 +225,8 @@ async function loadCategoriesInModal(modalContent) {
     const selectedId = select.dataset.selectedCategoryId || "";
 
     try {
-        const response = await fetch("Categories/Options");
+        console.log("Actualizado");
+        const response = await fetch("../Categories/Options");
 
         if (!response.ok) {
             console.error("Error al cargar categorías");

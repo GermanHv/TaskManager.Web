@@ -130,7 +130,7 @@ namespace TaskManager.Web.Services
             return await _httpClient.GetFromJsonAsync<TaskViewModel>($"/api/tasks/{id}");
         }
 
-        public async Task<PagedResultViewModel<TaskViewModel>> AdvancedSearchAsync(TaskSearchViewModel filters)
+        public async Task<PagedResultViewModel<TaskViewModel>>AdvancedSearchAsync(TaskSearchViewModel filters)
         {
             var query = new Dictionary<string, string>();
 
